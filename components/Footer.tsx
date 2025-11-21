@@ -2,7 +2,11 @@ import React from 'react';
 import { Linkedin, Instagram, Facebook, Youtube } from 'lucide-react';
 import { Logo } from './Logo';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenPrivacy: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenPrivacy }) => {
   const year = new Date().getFullYear();
 
   return (
@@ -32,7 +36,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-mono text-slate-500">
           <p>&copy; {year} DateNova. Todos los derechos reservados.</p>
           <div className="mt-4 md:mt-0 flex space-x-6">
-            <a href="#" className="hover:text-brand-cyan transition-colors">Política de Privacidad</a>
+            <button onClick={onOpenPrivacy} className="hover:text-brand-cyan transition-colors">Política de Privacidad</button>
             <a href="#" className="hover:text-brand-cyan transition-colors">Términos de Servicio</a>
           </div>
         </div>

@@ -31,7 +31,7 @@ export const Contact: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs text-slate-500 uppercase tracking-widest font-mono mb-1">Email</p>
-                  <p className="text-slate-200 font-semibold hover:text-brand-cyan transition-colors">datenovadoc@gmail.com</p>
+                  <p className="text-slate-200 font-semibold hover:text-brand-cyan transition-colors">info@datenova.io</p>
                 </div>
               </div>
               

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
@@ -7,20 +7,50 @@ import { DataVizDemo } from './components/DataVizDemo';
 import { Clients } from './components/Clients';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
 
 function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'privacy'>('home');
+
+  const navigateToHome = () => {
+    setCurrentView('home');
+    // Small timeout to allow rendering before scrolling
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
+  };
+
   return (
     <div className="bg-brand-dark min-h-screen text-slate-200 font-sans selection:bg-brand-500 selection:text-white">
-      <Navbar />
+      
+      {/* Navbar needs to know how to navigate home if we are in privacy view */}
+      <Navbar 
+        isHome={currentView === 'home'} 
+        onNavigateHome={navigateToHome} 
+      />
+      
       <main>
-        <Hero />
-        <About />
-        <Services />
-        <DataVizDemo />
-        <Clients />
-        <Contact />
+        {currentView === 'home' ? (
+          <>
+            <Hero />
+            <About />
+            <Services />
+            <DataVizDemo />
+            <Clients />
+            <Contact />
+          </>
+        ) : (
+          <PrivacyPolicy onBack={navigateToHome} />
+        )}
       </main>
-      <Footer />
+
+      {/* Footer needs to trigger the privacy view */}
+      <Footer 
+        onOpenPrivacy={() => {
+          setCurrentView('privacy');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }} 
+      />
       
       {/* Floating WhatsApp Button */}
       <a 

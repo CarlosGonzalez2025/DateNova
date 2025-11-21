@@ -3,7 +3,12 @@ import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from '../constants';
 import { Logo } from './Logo';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  isHome?: boolean;
+  onNavigateHome?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ isHome = true, onNavigateHome }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -17,12 +22,32 @@ export const Navbar: React.FC = () => {
 
   // Función para manejar el scroll suave y evitar recargas de página
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault(); // Previene la navegación por defecto que causa el error
-    const element = document.querySelector(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    e.preventDefault();
+    
+    if (!isHome && onNavigateHome) {
+      // If we are on privacy page, go home first, then scroll (handled in parent)
+      onNavigateHome();
+      // Wait a bit for render then scroll
+      setTimeout(() => {
+         const element = document.querySelector(targetId);
+         if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      // Normal behavior on home page
+      const element = document.querySelector(targetId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-    setIsOpen(false); // Cierra el menú móvil si está abierto
+    setIsOpen(false);
+  };
+
+  const handleLogoClick = () => {
+    if (!isHome && onNavigateHome) {
+      onNavigateHome();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -35,7 +60,7 @@ export const Navbar: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <div className="cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="cursor-pointer group" onClick={handleLogoClick}>
             <Logo className="w-10 h-10" />
           </div>
 
